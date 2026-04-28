@@ -1,0 +1,10 @@
+[Unit]
+Description=IPMI Power Exporter - Collects power metrics via IPMI
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ipmi-power-exporter
+
+[Install]
+WantedBy=multi-user.target
