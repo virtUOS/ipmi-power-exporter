@@ -30,7 +30,7 @@ read FRU data and power readings, then uploads the metrics in Prometheus
 format to a configured S3 bucket.
 
 %prep
-%autosetup -n %{version}
+%autosetup -n %{name}-%{version}
 
 %build
 # No build required for bash script
