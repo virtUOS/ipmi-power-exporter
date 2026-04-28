@@ -14,6 +14,15 @@ Requires:       ipmitool
 Requires:       openssl
 Requires:       curl
 
+BuildRequires:  tar
+BuildRequires:  gzip
+
+BuildRequires:     systemd
+Requires(post):    systemd
+Requires(preun):   systemd
+Requires(postun):  systemd
+
+
 %description
 IPMI Power Exporter is a bash script that collects power metrics from IPMI
 and uploads them to an S3-compatible storage endpoint. It uses ipmitool to
