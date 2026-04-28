@@ -1,0 +1,5 @@
+ACCESS_KEY="my-s3-access-key"
+SECRET_KEY="my-s3-secret-key"
+S3_ENDPOINT="s3.example.com"
+BUCKET_NAME="my-bucket-name"
+OBJECT_NAME="my/server/metrics"

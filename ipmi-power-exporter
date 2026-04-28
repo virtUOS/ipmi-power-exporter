@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+# Set environment variables
+if [ -e ipmi-power-exporter.conf ]; then
+  . ipmi-power-exporter.conf
+else
+  . /etc/ipmi-power-exporter.conf
+fi
+
+# Generate metrics
+FRUDATA="$(ipmitool fru print)"
+MANUFACTURER="$(echo "${FRUDATA}" | sed -n 's/^ *Product Manufacturer *: *//p' | head -n1)"
+PRODUCT="$(echo "${FRUDATA}" | sed -n 's/^ *Product Name *: *//p' | head -n1)"
+HOST="$(cat /etc/hostname)"
+POWER="$(ipmitool dcmi power reading | sed -n 's/^ *Instantaneous power reading: *\([0-9]*\) Watts$/\1/p')"
+
+METRICS="# HELP power Current power draw
+# TYPE power counter
+power{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\", unit=\"Watt\"} ${POWER}"
+
+# Calculate required values
+CONTENT_TYPE="application/octet-stream"
+DATE=$(date -R)
+RESOURCE="/${BUCKET_NAME}/${OBJECT_NAME}"
+#SIGNATURE_STRING="PUT\n\n${CONTENT_TYPE}\n${DATE}\n${RESOURCE}"
+SIGNATURE_STRING="PUT\n\n${CONTENT_TYPE}\n${DATE}\nx-amz-acl:public-read\n${RESOURCE}"
+SIGNATURE=$(echo -en "${SIGNATURE_STRING}" | openssl sha1 -hmac "${SECRET_KEY}" -binary | base64)
+
+# Upload file using curl
+echo "${METRICS}" | curl -X PUT --upload-file - \
+  -H "Host: ${S3_ENDPOINT}" \
+  -H "Date: ${DATE}" \
+  -H "Content-Type: ${CONTENT_TYPE}" \
+  -H "x-amz-acl: public-read" \
+  -H "Authorization: AWS ${ACCESS_KEY}:${SIGNATURE}" \
+  "https://${S3_ENDPOINT}/${BUCKET_NAME}/${OBJECT_NAME}"
