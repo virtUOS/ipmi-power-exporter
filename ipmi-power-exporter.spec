@@ -1,5 +1,5 @@
 Name:           ipmi-power-exporter
-Version:        0.1
+Version:        %{exporter_version}
 Release:        1%{?dist}
 Summary:        IPMI Power Metrics Exporter for S3 Storage
 

@@ -1,0 +1,62 @@
+name: Create new release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*.*"
+
+jobs:
+  build:
+    name: build el9
+    runs-on: ubuntu-latest
+    container:
+      image: centos:stream9
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: install rpmdevtools
+        run: |
+          dnf install rpmdevtools
+
+      - name: install build requirements
+        run: |
+          dnf builddep ipmi-power-exporter.spec
+
+      - name: setup rpmdev tree
+        run: |
+          rpmdev-setuptree
+
+      - name: link rpmdev directory
+        run: |
+          ln -s ~/rpmbuild
+
+      - name: prepare SPEC file
+        working-directory: rpmbuild/SPECS
+        run: |
+          ln -s "${GITHUB_WORKSPACE}/ipmi-power-exporter.spec"
+
+      - name: Download tarball
+        run: |
+          spectool -g -R ipmi-power-exporter.spec
+
+      - name: define rpm version
+        run: |
+          echo "%exporter_version ${{  github.ref_name }}" | tee ~/.rpmmacros
+
+      - name: build rpm
+        working-directory: rpmbuild/SPECS
+        run: |
+          rpmbuild  -ba ipmi-power-exporter.spec
+
+      - name: list rpms
+        working-directory: rpmbuild/RPMS/noarch
+        run: |
+          du -hs ./*.rpm
+
+      - name: create new release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: rpmbuild/RPMS/noarch/*.rpm
+          fail_on_unmatched_files: true
+          generate_release_notes: true
