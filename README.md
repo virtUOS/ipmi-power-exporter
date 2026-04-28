@@ -27,8 +27,11 @@ The script outputs Prometheus metrics in this format:
 
 ```
 # HELP power Current power draw
-# TYPE power counter
+# TYPE power gauge
 power{manufacturer="Dell", product="PowerEdge R740", host="server01", unit="Watt"} 245
+# HELP updated Unix timestamp of last metric update
+# TYPE updated counter
+updated{host="server01"} 1714351200
 ```
 
 ## Systemd Setup

@@ -16,10 +16,14 @@ MANUFACTURER="$(echo "${FRUDATA}" | sed -n 's/^ *Product Manufacturer *: *//p' |
 PRODUCT="$(echo "${FRUDATA}" | sed -n 's/^ *Product Name *: *//p' | head -n1)"
 HOST="$(cat /etc/hostname)"
 POWER="$(ipmitool dcmi power reading | sed -n 's/^ *Instantaneous power reading: *\([0-9]*\) Watts$/\1/p')"
+UPDATED="$(date +%s)"
 
 METRICS="# HELP power Current power draw
-# TYPE power counter
-power{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\", unit=\"Watt\"} ${POWER}"
+# TYPE power gauge
+power{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\", unit=\"Watt\"} ${POWER}
+# HELP updated Unix timestamp of last metric update
+# TYPE updated counter
+updated{host=\"${HOST}\"} ${UPDATED}"
 
 # Calculate required values
 CONTENT_TYPE="application/octet-stream"
