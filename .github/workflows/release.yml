@@ -36,13 +36,13 @@ jobs:
         run: |
           ln -s "${GITHUB_WORKSPACE}/ipmi-power-exporter.spec"
 
-      - name: Download tarball
-        run: |
-          spectool -g -R ipmi-power-exporter.spec
-
       - name: define rpm version
         run: |
           echo "%exporter_version ${{  github.ref_name }}" | tee ~/.rpmmacros
+
+      - name: Download tarball
+        run: |
+          spectool -g -R ipmi-power-exporter.spec
 
       - name: build rpm
         working-directory: rpmbuild/SPECS

@@ -5,7 +5,7 @@ Summary:        IPMI Power Metrics Exporter for S3 Storage
 
 License:        MIT
 URL:            https://github.com/virtUOS/ipmi-power-exporter
-Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildArch:      noarch
 
@@ -30,7 +30,7 @@ read FRU data and power readings, then uploads the metrics in Prometheus
 format to a configured S3 bucket.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -n %{version}
 
 %build
 # No build required for bash script
