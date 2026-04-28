@@ -11,7 +11,7 @@ else
 fi
 
 # Generate metrics
-FRUDATA="$(ipmitool fru print)"
+FRUDATA="$(ipmitool fru print || :)"
 MANUFACTURER="$(echo "${FRUDATA}" | sed -n 's/^ *Product Manufacturer *: *//p' | head -n1)"
 PRODUCT="$(echo "${FRUDATA}" | sed -n 's/^ *Product Name *: *//p' | head -n1)"
 HOST="$(cat /etc/hostname)"
