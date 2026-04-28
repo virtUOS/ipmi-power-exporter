@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "*.*"
+      - "*"
 
 jobs:
   build:
     name: build el9
     runs-on: ubuntu-latest
     container:
-      image: centos:stream9
+      image: quay.io/centos/centos:stream9
     steps:
       - uses: actions/checkout@v6
 
