@@ -17,11 +17,11 @@ jobs:
 
       - name: install rpmdevtools
         run: |
-          dnf install rpmdevtools
+          dnf install -y rpmdevtools
 
       - name: install build requirements
         run: |
-          dnf builddep ipmi-power-exporter.spec
+          dnf builddep -y ipmi-power-exporter.spec
 
       - name: setup rpmdev tree
         run: |
