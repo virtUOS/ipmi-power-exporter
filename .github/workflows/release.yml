@@ -57,7 +57,7 @@ jobs:
           du -hs ./*.rpm
 
       - name: upload rpm artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rpm-package
           path: rpmbuild/RPMS/noarch/*.rpm
@@ -90,7 +90,7 @@ jobs:
           cp ../*.deb .
 
       - name: upload deb artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deb-package
           path: "*.deb"
@@ -102,13 +102,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: download rpm artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: rpm-package
           path: rpm-package
 
       - name: download deb artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: deb-package
           path: deb-package
