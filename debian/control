@@ -1,0 +1,17 @@
+Source: ipmi-power-exporter
+Section: admin
+Priority: optional
+Maintainer: Lars Kiesow <lkiesow@uos.de>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/virtUOS/ipmi-power-exporter
+Rules-Requires-Root: no
+
+Package: ipmi-power-exporter
+Architecture: all
+Depends: ${misc:Depends}, ipmitool, openssl, curl
+Description: IPMI Power Metrics Exporter for S3 Storage
+ IPMI Power Exporter is a bash script that collects power metrics from IPMI
+ and uploads them to an S3-compatible storage endpoint. It uses ipmitool to
+ read FRU data and power readings, then uploads the metrics in Prometheus
+ format to a configured S3 bucket.

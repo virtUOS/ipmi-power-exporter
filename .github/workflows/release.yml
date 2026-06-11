@@ -3,8 +3,6 @@ name: Create new release
 on:
   workflow_dispatch:
   push:
-    tags:
-      - "*"
 
 jobs:
   build:
@@ -54,9 +52,68 @@ jobs:
         run: |
           du -hs ./*.rpm
 
-      - name: create new release
+      - name: upload rpm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm-package
+          path: rpmbuild/RPMS/noarch/*.rpm
+
+  build-deb:
+    name: build deb (ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y debhelper
+
+      - name: set package version
+        run: |
+          sed -i "s/VERSION/${{ github.ref_name }}/" debian/changelog
+
+      - name: build deb package
+        run: |
+          dpkg-buildpackage -b -us -uc
+
+      - name: list debs
+        run: |
+          du -hs ../*.deb
+
+      - name: copy deb to workspace
+        run: |
+          cp ../*.deb .
+
+      - name: upload deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: "*.deb"
+
+  release:
+    name: create release
+    needs: [build, build-deb]
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - name: download rpm artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: rpm-package
+          path: rpm-package
+
+      - name: download deb artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deb-package
+          path: deb-package
+
+      - name: create release
         uses: softprops/action-gh-release@v1
         with:
-          files: rpmbuild/RPMS/noarch/*.rpm
+          files: |
+            rpm-package/*.rpm
+            deb-package/*.deb
           fail_on_unmatched_files: true
           generate_release_notes: true
