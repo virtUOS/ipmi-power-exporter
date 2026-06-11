@@ -36,11 +36,15 @@ jobs:
 
       - name: define rpm version
         run: |
-          echo "%exporter_version ${{  github.ref_name }}" | tee ~/.rpmmacros
+          echo "%exporter_version ${{ github.ref_type == 'tag' && github.ref_name || '0.0.0' }}" | tee ~/.rpmmacros
 
-      - name: Download tarball
+      - name: create source tarball
         run: |
-          spectool -g -R ipmi-power-exporter.spec
+          version=${{ github.ref_type == 'tag' && github.ref_name || '0.0.0' }}
+          mkdir -p /tmp/ipmi-power-exporter-${version}
+          cp -a "${GITHUB_WORKSPACE}/." /tmp/ipmi-power-exporter-${version}/
+          tar czf ~/rpmbuild/SOURCES/${version}.tar.gz \
+            -C /tmp ipmi-power-exporter-${version}
 
       - name: build rpm
         working-directory: rpmbuild/SPECS
@@ -71,7 +75,7 @@ jobs:
 
       - name: set package version
         run: |
-          sed -i "s/VERSION/${{ github.ref_name }}/" debian/changelog
+          sed -i "s/VERSION/${{ github.ref_type == 'tag' && github.ref_name || '0.0.0' }}/" debian/changelog
 
       - name: build deb package
         run: |
