@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+execute_after_dh_install:
+	mv debian/ipmi-power-exporter/etc/ipmi-power-exporter.conf.example \
+	   debian/ipmi-power-exporter/etc/ipmi-power-exporter.conf

@@ -1,0 +1,4 @@
+ipmi-power-exporter usr/bin/
+ipmi-power-exporter.conf.example etc/
+ipmi-power-exporter.service usr/lib/systemd/system/
+ipmi-power-exporter.timer usr/lib/systemd/system/
