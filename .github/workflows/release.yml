@@ -79,7 +79,7 @@ jobs:
 
       - name: build deb package
         run: |
-          dpkg-buildpackage -b -us -uc
+          dpkg-buildpackage -b -us -uc -d
 
       - name: list debs
         run: |
