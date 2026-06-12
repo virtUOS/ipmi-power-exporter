@@ -3,6 +3,22 @@
 set -o errexit
 set -o nounset
 
+delete_metrics() {
+  [[ -z "${S3_ENDPOINT:-}" ]] && return
+  local date sig
+  date=$(date -R)
+  sig=$(echo -en "DELETE\n\n\n${date}\n/${BUCKET_NAME}/${OBJECT_NAME}" \
+    | openssl sha1 -hmac "${SECRET_KEY}" -binary | base64)
+  curl --fail --max-time 30 -X DELETE \
+    -H "Host: ${S3_ENDPOINT}" \
+    -H "Date: ${date}" \
+    -H "Authorization: AWS ${ACCESS_KEY}:${sig}" \
+    "https://${S3_ENDPOINT}/${BUCKET_NAME}/${OBJECT_NAME}" || true
+}
+
+SUCCESS=false
+trap '[[ "${SUCCESS}" == true ]] || delete_metrics' EXIT
+
 # Set environment variables
 if [ -e ipmi-power-exporter.conf ]; then
   . ipmi-power-exporter.conf
@@ -56,3 +72,4 @@ echo "${METRICS}" | curl --fail -X PUT --upload-file - \
   -H "x-amz-acl: public-read" \
   -H "Authorization: AWS ${ACCESS_KEY}:${SIGNATURE}" \
   "https://${S3_ENDPOINT}/${BUCKET_NAME}/${OBJECT_NAME}"
+SUCCESS=true
