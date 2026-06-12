@@ -49,7 +49,7 @@ SIGNATURE_STRING="PUT\n\n${CONTENT_TYPE}\n${DATE}\nx-amz-acl:public-read\n${RESO
 SIGNATURE=$(echo -en "${SIGNATURE_STRING}" | openssl sha1 -hmac "${SECRET_KEY}" -binary | base64)
 
 # Upload file using curl
-echo "${METRICS}" | curl -X PUT --upload-file - \
+echo "${METRICS}" | curl --fail -X PUT --upload-file - \
   -H "Host: ${S3_ENDPOINT}" \
   -H "Date: ${DATE}" \
   -H "Content-Type: ${CONTENT_TYPE}" \
