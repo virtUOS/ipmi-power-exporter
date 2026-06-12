@@ -16,6 +16,10 @@ MANUFACTURER="$(echo "${FRUDATA}" | sed -n 's/^ *Product Manufacturer *: *//p' |
 PRODUCT="$(echo "${FRUDATA}" | sed -n 's/^ *Product Name *: *//p' | head -n1)"
 HOST="$(cat /etc/hostname)"
 POWER="$(ipmitool dcmi power reading | sed -n 's/^ *Instantaneous power reading: *\([0-9]*\) Watts$/\1/p')"
+if [[ -z "${POWER}" ]]; then
+  echo "ERROR: failed to read instantaneous power from ipmitool dcmi power reading" >&2
+  exit 1
+fi
 UPDATED="$(date +%s)"
 
 METRICS="# HELP power Current power draw
