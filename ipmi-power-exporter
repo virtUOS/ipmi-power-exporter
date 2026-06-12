@@ -22,9 +22,9 @@ if [[ -z "${POWER}" ]]; then
 fi
 UPDATED="$(date +%s)"
 
-METRICS="# HELP power Current power draw
-# TYPE power gauge
-power{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\", unit=\"Watt\"} ${POWER}
+METRICS="# HELP power_watts Current power draw in watts
+# TYPE power_watts gauge
+power_watts{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\"} ${POWER}
 # HELP updated Unix timestamp of last metric update
 # TYPE updated gauge
 updated{host=\"${HOST}\"} ${UPDATED}"
