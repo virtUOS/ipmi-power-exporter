@@ -15,16 +15,28 @@ FRUDATA="$(ipmitool fru print || :)"
 MANUFACTURER="$(echo "${FRUDATA}" | sed -n 's/^ *Product Manufacturer *: *//p' | head -n1)"
 PRODUCT="$(echo "${FRUDATA}" | sed -n 's/^ *Product Name *: *//p' | head -n1)"
 HOST="$(cat /etc/hostname)"
-POWER="$(ipmitool dcmi power reading | sed -n 's/^ *Instantaneous power reading: *\([0-9]*\) Watts$/\1/p')"
+DCMI="$(ipmitool dcmi power reading)"
+POWER="$(echo "${DCMI}" | sed -n 's/^ *Instantaneous power reading: *\([0-9]*\) Watts$/\1/p')"
 if [[ -z "${POWER}" ]]; then
   echo "ERROR: failed to read instantaneous power from ipmitool dcmi power reading" >&2
   exit 1
 fi
+POWER_MIN="$(echo "${DCMI}" | sed -n 's/^ *Minimum during sampling period: *\([0-9]*\) Watts$/\1/p')"
+POWER_MAX="$(echo "${DCMI}" | sed -n 's/^ *Maximum during sampling period: *\([0-9]*\) Watts$/\1/p')"
+POWER_AVG="$(echo "${DCMI}" | sed -n 's/^ *Average power reading over sample period: *\([0-9]*\) Watts$/\1/p')"
 UPDATED="$(date +%s)"
 
+LABELS="manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\""
 METRICS="# HELP power_watts Current power draw in watts
 # TYPE power_watts gauge
-power_watts{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\"} ${POWER}
+power_watts{${LABELS}} ${POWER}"
+[[ -n "${POWER_MIN}" ]] && METRICS+="
+power_watts_min{${LABELS}} ${POWER_MIN}"
+[[ -n "${POWER_MAX}" ]] && METRICS+="
+power_watts_max{${LABELS}} ${POWER_MAX}"
+[[ -n "${POWER_AVG}" ]] && METRICS+="
+power_watts_avg{${LABELS}} ${POWER_AVG}"
+METRICS+="
 # HELP updated Unix timestamp of last metric update
 # TYPE updated gauge
 updated{host=\"${HOST}\"} ${UPDATED}"
