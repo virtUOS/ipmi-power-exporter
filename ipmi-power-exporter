@@ -22,14 +22,13 @@ METRICS="# HELP power Current power draw
 # TYPE power gauge
 power{manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\", unit=\"Watt\"} ${POWER}
 # HELP updated Unix timestamp of last metric update
-# TYPE updated counter
+# TYPE updated gauge
 updated{host=\"${HOST}\"} ${UPDATED}"
 
 # Calculate required values
 CONTENT_TYPE="application/octet-stream"
 DATE=$(date -R)
 RESOURCE="/${BUCKET_NAME}/${OBJECT_NAME}"
-#SIGNATURE_STRING="PUT\n\n${CONTENT_TYPE}\n${DATE}\n${RESOURCE}"
 SIGNATURE_STRING="PUT\n\n${CONTENT_TYPE}\n${DATE}\nx-amz-acl:public-read\n${RESOURCE}"
 SIGNATURE=$(echo -en "${SIGNATURE_STRING}" | openssl sha1 -hmac "${SECRET_KEY}" -binary | base64)
 
