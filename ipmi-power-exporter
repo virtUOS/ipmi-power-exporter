@@ -40,6 +40,9 @@ fi
 POWER_MIN="$(echo "${DCMI}" | sed -n 's/^ *Minimum during sampling period: *\([0-9]*\) Watts$/\1/p')"
 POWER_MAX="$(echo "${DCMI}" | sed -n 's/^ *Maximum during sampling period: *\([0-9]*\) Watts$/\1/p')"
 POWER_AVG="$(echo "${DCMI}" | sed -n 's/^ *Average power reading over sample period: *\([0-9]*\) Watts$/\1/p')"
+POWER_SAMPLING_HEX="$(echo "${DCMI}" | sed -n 's/.*Sampling period: *\([0-9a-fA-F]*\) Seconds\..*/\1/p')"
+POWER_SAMPLING_SECONDS=""
+[[ -n "${POWER_SAMPLING_HEX}" ]] && POWER_SAMPLING_SECONDS=$((16#${POWER_SAMPLING_HEX}))
 UPDATED="$(date +%s)"
 
 LABELS="manufacturer=\"${MANUFACTURER}\", product=\"${PRODUCT}\", host=\"${HOST}\""
@@ -52,6 +55,8 @@ power_watts_min{${LABELS}} ${POWER_MIN}"
 power_watts_max{${LABELS}} ${POWER_MAX}"
 [[ -n "${POWER_AVG}" ]] && METRICS+="
 power_watts_avg{${LABELS}} ${POWER_AVG}"
+[[ -n "${POWER_SAMPLING_SECONDS}" ]] && METRICS+="
+power_sampling_period_seconds{${LABELS}} ${POWER_SAMPLING_SECONDS}"
 METRICS+="
 # HELP updated Unix timestamp of last metric update
 # TYPE updated gauge
