@@ -5,6 +5,7 @@ A bash script that collects IPMI power metrics and uploads them to an S3-compati
 ## How It Works
 
 The script:
+
 1. Uses `ipmitool` to retrieve hardware information (manufacturer, product name)
 2. Gets instantaneous, minimum, maximum, and average power readings via IPMI DCMI
 3. Formats the data as Prometheus metrics
@@ -25,6 +26,10 @@ Copy [`ipmi-power-exporter.conf.example`](ipmi-power-exporter.conf.example) to `
 
 The script outputs Prometheus metrics in this format:
 
+> **Note:** For most use cases, `power_watts_avg` is the most meaningful metric to monitor.
+> The instantaneous reading (`power_watts`) can fluctuate significantly from moment to moment,
+> while the average reflects actual power consumption over the BMC's internal sampling period.
+
 ```
 # HELP power_watts Current power draw in watts
 # TYPE power_watts gauge
@@ -32,6 +37,7 @@ power_watts{manufacturer="Dell", product="PowerEdge R740", host="server01"} 245
 power_watts_min{manufacturer="Dell", product="PowerEdge R740", host="server01"} 220
 power_watts_max{manufacturer="Dell", product="PowerEdge R740", host="server01"} 280
 power_watts_avg{manufacturer="Dell", product="PowerEdge R740", host="server01"} 248
+power_sampling_period_seconds{manufacturer="Dell", product="PowerEdge R740", host="server01"} 5
 # HELP updated Unix timestamp of last metric update
 # TYPE updated gauge
 updated{host="server01"} 1714351200
