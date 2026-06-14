@@ -64,7 +64,7 @@ jobs:
 
   build-deb:
     name: build deb (ubuntu)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
 
@@ -99,7 +99,7 @@ jobs:
     name: create release
     needs: [build, build-deb]
     if: github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: download rpm artifact
         uses: actions/download-artifact@v8
