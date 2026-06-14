@@ -1,0 +1,15 @@
+#!/bin/bash
+prev_arg=""
+method=""
+for arg in "$@"; do
+    [[ "${prev_arg}" == "-X" ]] && method="${arg}"
+    prev_arg="${arg}"
+done
+
+if [[ "${method}" == "PUT" && -n "${CURL_CAPTURE_FILE}" ]]; then
+    cat - > "${CURL_CAPTURE_FILE}"
+elif [[ "${method}" == "PUT" ]]; then
+    cat - > /dev/null
+fi
+
+exit 0

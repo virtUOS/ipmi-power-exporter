@@ -1,0 +1,11 @@
+#!/bin/bash
+FIXTURES_DIR="$(dirname "$(readlink -f "$0")")"
+
+if [[ "$1 $2" == "fru print" ]]; then
+    cat "${FIXTURES_DIR}/ipmitool-fru-print.out"
+elif [[ "$1 $2 $3" == "dcmi power reading" ]]; then
+    cat "${FIXTURES_DIR}/ipmitool-dcmi-power-reading.out"
+else
+    echo "ipmitool-mock: unrecognised arguments: $*" >&2
+    exit 1
+fi

@@ -1,0 +1,52 @@
+FRU Device Description : Builtin FRU Device (ID 0)
+ Board Mfg Date        : Mon 26 Jan 2015 06:41:00 PM UTC UTC
+ Board Mfg             : FUJITSU
+ Board Product         : D0000
+ Board Serial          : 00000001
+ Board Part Number     : S00000-D0000-A00
+ Board Extra           : WGS00 GS00
+ Board Extra           : 00
+
+FRU Device Description : Chassis (ID 2)
+ Chassis Type          : Rack Mount Chassis
+ Chassis Extra         : SERVERX0M0R0
+ Product Manufacturer  : FUJITSU
+ Product Name          : EXAMPLE SERVER X1
+ Product Part Number   : CUZ:0000V000-XXX00
+ Product Version       : GS00
+ Product Serial        : EXMPL000001
+ Product Asset Tag     : 1
+ Product Extra         : 000000
+ Product Extra         : 0000
+ Product Extra         : CS00
+
+FRU Device Description : MainBoard (ID 3)
+ Board Mfg Date        : Mon 26 Jan 2015 06:41:00 PM UTC UTC
+ Board Mfg             : FUJITSU
+ Board Product         : D0000
+ Board Serial          : 00000001
+ Board Part Number     : S00000-D0000-A00
+ Board Extra           : WGS00 GS00
+ Board Extra           : 00
+
+FRU Device Description : PSU1 (ID 10)
+ Board Mfg Date        : Sun 28 Sep 2014 04:04:00 PM UTC UTC
+ Board Mfg             : DELTA
+ Board Product         : PSU-800AB-0 A
+ Board Serial          : EXMP1400000001
+ Board Part Number     : A0C00000000
+ Board Extra           : S0A
+ Board Extra           : 08
+
+FRU Device Description : PSU2 (ID 11)
+ Board Mfg Date        : Sun 28 Sep 2014 04:04:00 PM UTC UTC
+ Board Mfg             : DELTA
+ Board Product         : PSU-800AB-0 A
+ Board Serial          : EXMP1400000002
+ Board Part Number     : A0C00000000
+ Board Extra           : S0A
+ Board Extra           : 08
+
+FRU Device Description : PSU2 (ID 12)
+ Device not present (Command response could not be provided)
+
